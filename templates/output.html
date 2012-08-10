@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+<div class="twelve columns">
+<h2>{{ command }}</h2>
+	{% for line in output %}
+		{{ line }}<br>
+	{% endfor %}
+</div>
+
+{% endblock %}
