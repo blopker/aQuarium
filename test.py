@@ -20,15 +20,15 @@ class AquariumTestCase(unittest.TestCase):
         resp = self.app.get('/' + script)
         assert resp.status_code == 501
 
-        script = 'uname'
+        script = 'uname.sh'
         resp = self.app.get('/' + script)
         assert "Linux" in resp.data
 
-        script = 'ps'
+        script = 'ps.sh'
         resp = self.app.get('/' + script)
         assert "root" in resp.data
 
-        script = 'fail'
+        script = 'fail.sh'
         resp = self.app.get('/' + script)
         assert resp.status_code == 500
 
@@ -38,7 +38,7 @@ class AquariumTestCase(unittest.TestCase):
 
     def test_getCommands(self):
         lis = aquarium.getCommands()
-        assert "ps" in lis
+        assert "ps.sh" in lis
         assert "not_executable" not in lis
 
 if __name__ == '__main__':

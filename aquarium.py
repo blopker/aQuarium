@@ -65,7 +65,8 @@ def getCommands():
     commands = {}
     scripts = getScripts()
     for script in scripts:
-        command = script.split('.')[0]
+        # command = script.split('.')[0]
+        command = script
         commands[command] = script
     return commands
 
