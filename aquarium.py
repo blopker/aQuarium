@@ -1,4 +1,4 @@
-from flask import Flask, abort, url_for, render_template, redirect
+from flask import Flask, abort, url_for, render_template, redirect, g
 import os
 import subprocess
 
@@ -17,6 +17,7 @@ def index():
 
 @app.route('/<command>')
 def command(command):
+    g.command = command
     output = formatString(runCommand(command))
     return render_template('output.html', output=output, command=command)
 
@@ -24,6 +25,11 @@ def command(command):
 @app.route('/commands')
 def commands():
     return redirect(url_for('index'))
+
+
+@app.errorhandler(500)
+def scriptFailed(error):
+    return render_template('output.html'), 500
 
 
 @app.context_processor
@@ -50,7 +56,8 @@ def runScript(script):
     try:
         return subprocess.check_output(app.config['SCRIPTS'] + os.sep + script,
             stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError, e:
+        g.error = e.output
         abort(500)
 
 

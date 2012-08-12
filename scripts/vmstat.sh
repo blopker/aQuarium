@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-vmstat
+vmstat | awk 'NR > 1'

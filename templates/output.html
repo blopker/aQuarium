@@ -3,19 +3,33 @@
 
 <div class="row">
 <div class="twelve columns">
-<h2>{{ command }}</h2>
+<h2>{{ g.command }}</h2>
+	{% if g.error %}
+	<div class="alert-box [success alert secondary]">
+  		{{ g.error }}
+  		<a href="" class="close">&times;</a>
+	</div>
+	{% endif %}
+	{% if output %}
 	<table>
+		<thead>
+			<tr>
+				{% for col in output[0].split() %}
+					<th>{{ col }}</th>
+				{% endfor %}
+			</tr>
+		</thead>
 		<tbody>
-			{% for line in output %}
+			{% for line in output[1:] %}
 			<tr>
 				{% for col in line.split() %}
-					<th>{{ col }}</th>
+					<td>{{ col }}</td>
 				{% endfor %}
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-
+	{% endif %}
 </div>
 
 {% endblock %}
