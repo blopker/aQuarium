@@ -1,5 +1,7 @@
 import aquarium
 import unittest
+import json
+from collections import OrderedDict
 
 
 class AquariumTestCase(unittest.TestCase):
@@ -17,27 +19,33 @@ class AquariumTestCase(unittest.TestCase):
 
     def test_script(self):
         script = 'not_a_real_script'
-        resp = self.app.get('/' + script)
+        resp = self.app.get('script/' + script)
         assert resp.status_code == 501
 
         script = 'uname.sh'
-        resp = self.app.get('/' + script)
+        resp = self.app.get('script/' + script)
         assert "Linux" in resp.data
 
         script = 'ps.sh'
-        resp = self.app.get('/' + script)
+        resp = self.app.get('script/' + script)
         assert "root" in resp.data
 
         script = 'fail.sh'
-        resp = self.app.get('/' + script)
+        resp = self.app.get('script/' + script)
         assert resp.status_code == 500
 
-    def test_nav(self):
-        resp = self.app.get("/commands", follow_redirects=True)
-        assert "/ps" in resp.data
+    def test_logs(self):
+        log = "vmstat.log"
+        resp = self.app.get("log/" + log)
+        assert "bo" in resp.data
 
-    def test_getCommands(self):
-        lis = aquarium.getCommands()
+    def test_logFormat(self):
+        data = "bo is awesome\n1 2 3\n4 5 6"
+        dic = OrderedDict([("bo", ("1", "4")), ("is", ("2", "5")), ("awesome", ("3", "6"))])
+        assert aquarium.formatLog(data) == dic
+
+    def test_getScripts(self):
+        lis = aquarium.getScripts()
         assert "ps.sh" in lis
         assert "not_executable" not in lis
 

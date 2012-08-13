@@ -1,58 +1,96 @@
-from flask import Flask, abort, url_for, render_template, redirect, g
+from flask import Flask, abort, url_for, render_template, g
 import os
+from collections import OrderedDict
 import subprocess
 
 # configuration
 SCRIPTS = 'scripts'
 DEBUG = True
+LOGS = 'logs'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 
+@app.before_request
+def before_request():
+    g.logs = getLogs()
+    g.scripts = getScripts()
+
+
 @app.route('/')
 def index():
+    g.title = "Welcome to Aquarium"
     return render_template('index.html')
 
 
-@app.route('/<command>')
-def command(command):
-    g.command = command
-    output = formatString(runCommand(command))
-    return render_template('output.html', output=output, command=command)
+@app.route('/script/<script>')
+def script(script):
+    g.title = script
+    output = formatScript(runScript(script))
+    return render_template('script.html', output=output)
 
 
-@app.route('/commands')
-def commands():
-    return redirect(url_for('index'))
+@app.route('/log/<log>')
+def log(log):
+    g.title = log
+    output = formatLog(readLog(log))
+    return render_template('log.html', output=output)
 
 
 @app.errorhandler(500)
 def scriptFailed(error):
-    return render_template('output.html'), 500
+    return render_template('script.html'), 500
 
 
 @app.context_processor
 def nav():
     nav = {}
-    commands = getCommands()
-    for cmd in commands:
-        nav[cmd] = url_for('command', command=cmd)
+    script_nav = {}
+    for script in g.scripts:
+        script_nav[script] = url_for('script', script=script)
+    nav["Scripts"] = script_nav
+
+    logs_nav = {}
+    for log in g.logs:
+        logs_nav[log] = url_for('log', log=log)
+    nav["Logs"] = logs_nav
     return dict(nav=nav)
 
 
-def formatString(string):
+def getLogs():
+    files = sorted(os.listdir(app.config['LOGS']))
+    logs = [x for x in files if os.access(app.config['LOGS'] + os.sep + x, os.R_OK)]
+    return logs
+
+
+def readLog(log):
+    text = ""
+    with open(app.config['LOGS'] + os.sep + log) as l:
+        text = l.read()
+    return text
+
+
+def formatScript(string):
     return string.split('\n')
 
 
-def runCommand(command):
-    script = getScriptName(command)
-    if script:
-        return runScript(script)
-    abort(501)
+def formatLog(string):
+    lists = string.strip().split('\n')
+    lists = [lis.strip().split() for lis in lists]
+    dic = OrderedDict()
+
+    def mapper(*args):
+        dic[args[0]] = args[1:]
+    map(mapper, *lists)
+
+    # json_out = json.dumps(dic)
+    return dic
 
 
 def runScript(script):
+    if not script in g.scripts:
+        abort(501)
     try:
         return subprocess.check_output(app.config['SCRIPTS'] + os.sep + script,
             stderr=subprocess.STDOUT)
@@ -61,25 +99,9 @@ def runScript(script):
         abort(500)
 
 
-def getScriptName(command):
-    commands = getCommands()
-    if command in commands:
-        return commands[command]
-    return ""
-
-
-def getCommands():
-    commands = {}
-    scripts = getScripts()
-    for script in scripts:
-        # command = script.split('.')[0]
-        command = script
-        commands[command] = script
-    return commands
-
-
 def getScripts():
     files = sorted(os.listdir(app.config['SCRIPTS']))
+    #  Only use scripts that are executable (X_OK).
     scripts = [x for x in files if os.access(app.config['SCRIPTS'] + os.sep + x, os.X_OK)]
     return scripts
 

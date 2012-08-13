@@ -1,15 +1,5 @@
 {% extends "layout.html" %}
 {% block body %}
-
-<div class="row">
-<div class="twelve columns">
-<h2>{{ g.command }}</h2>
-	{% if g.error %}
-	<div class="alert-box [success alert secondary]">
-  		{{ g.error }}
-  		<a href="" class="close">&times;</a>
-	</div>
-	{% endif %}
 	{% if output %}
 	<table>
 		<thead>
@@ -30,6 +20,4 @@
 		</tbody>
 	</table>
 	{% endif %}
-</div>
-
 {% endblock %}

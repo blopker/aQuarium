@@ -6,6 +6,8 @@
 <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
+
+      {% block head %}
   <meta charset="utf-8" />
 
   <!-- Set the viewport width to device width for mobile -->
@@ -24,28 +26,44 @@
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
+
+      {% endblock %}
 </head>
 <body>
   <div class="row">
     <nav class="two columns">
       <a href="{{ url_for('index') }}"><h3 id="logo">aQuarium</h3></a>
       <ul>
-      {% for command in nav %}
-        <li><a href="{{ nav[command] }}">{{ command }}</a></li>
+      {% for section in nav %}
+        <h5 class="subheader">{{ section }}</h5>
+        {% for command in nav[section] %}
+        <li><a href="{{ nav[section][command] }}">{{ command }}</a></li>
+        {% endfor %}
       {% endfor %}
       </ul>
     </nav>
     <div class="ten columns">
-      {% block body %}
-      {% endblock %}
+      <div class="row">
+        <div class="twelve columns">
+          <h2>{{ g.title }}</h2>
+            {% if g.error %}
+            <div class="alert-box alert">
+                {{ g.error }}
+                <a href="" class="close">&times;</a>
+            </div>
+            {% endif %}
+            {% block body %}
+            {% endblock %}
+        </div>
     </div>
   </div>
-
-
   <!-- Included JS Files (Compressed) -->
   <script src="{{ url_for('static', filename='javascripts/foundation.min.js') }}"></script>
 
   <!-- Initialize JS Plugins -->
+  {% block javascript %}
+  {% endblock %}
   <script src="{{ url_for('static', filename='javascripts/app.js') }}"></script>
+
 </body>
 </html>
