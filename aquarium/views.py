@@ -1,4 +1,5 @@
-from flask import Flask, abort, url_for, render_template, g
+from flask import abort, url_for, render_template, g
+from aquarium import app
 import os
 from collections import OrderedDict
 import subprocess
@@ -8,7 +9,6 @@ SCRIPTS = 'scripts'
 DEBUG = True
 LOGS = 'logs'
 
-app = Flask(__name__)
 app.config.from_object(__name__)
 
 
@@ -104,7 +104,3 @@ def getScripts():
     #  Only use scripts that are executable (X_OK).
     scripts = [x for x in files if os.access(app.config['SCRIPTS'] + os.sep + x, os.X_OK)]
     return scripts
-
-if __name__ == '__main__':
-    app.debug = app.config['DEBUG']
-    app.run(host='0.0.0.0')

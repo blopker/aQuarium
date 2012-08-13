@@ -1,6 +1,5 @@
 import aquarium
 import unittest
-import json
 from collections import OrderedDict
 
 
@@ -42,10 +41,10 @@ class AquariumTestCase(unittest.TestCase):
     def test_logFormat(self):
         data = "bo is awesome\n1 2 3\n4 5 6"
         dic = OrderedDict([("bo", ("1", "4")), ("is", ("2", "5")), ("awesome", ("3", "6"))])
-        assert aquarium.formatLog(data) == dic
+        assert aquarium.views.formatLog(data) == dic
 
     def test_getScripts(self):
-        lis = aquarium.getScripts()
+        lis = aquarium.views.getScripts()
         assert "ps.sh" in lis
         assert "not_executable" not in lis
 
