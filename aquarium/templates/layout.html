@@ -13,7 +13,7 @@
   <!-- Set the viewport width to device width for mobile -->
   <meta name="viewport" content="width=device-width" />
 
-  <title>Welcome to aQuarium</title>
+  <title>aQuarium</title>
 
   <!-- Included CSS Files (Compressed) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/foundation.min.css') }}">
@@ -31,18 +31,22 @@
 </head>
 <body>
   <div class="row">
-    <nav class="two columns">
-      <a href="{{ url_for('index') }}"><h3 id="logo">aQuarium</h3></a>
-      <ul>
-      {% for section in nav %}
-        <h5 class="subheader">{{ section }}</h5>
-        {% for command in nav[section] %}
-        <li><a href="{{ nav[section][command] }}">{{ command }}</a></li>
-        {% endfor %}
-      {% endfor %}
-      </ul>
-    </nav>
-    <div class="ten columns">
+    <div class="twelve columns">
+      <a href="{{ url_for('index') }}"><h1 id="logo">aQuarium</h1></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="twelve columns">
+      <nav>
+        <ul class="link-list">
+          {% for sec in g.sections%}
+          <li><a href="{{ url_for('section', sec=sec) }}">{{ sec }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+    <hr>
+  </div>
       <div class="row">
         <div class="twelve columns">
           <h2>{{ g.title }}</h2>
@@ -55,8 +59,7 @@
             {% block body %}
             {% endblock %}
         </div>
-    </div>
-  </div>
+      </div>
   <!-- Included JS Files (Compressed) -->
   <script src="{{ url_for('static', filename='javascripts/foundation.min.js') }}"></script>
 

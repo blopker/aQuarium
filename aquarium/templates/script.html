@@ -1,23 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
-	{% if output %}
-	<table>
-		<thead>
-			<tr>
-				{% for col in output[0].split() %}
-					<th>{{ col }}</th>
-				{% endfor %}
-			</tr>
-		</thead>
-		<tbody>
-			{% for line in output[1:] %}
-			<tr>
-				{% for col in line.split() %}
-					<td>{{ col }}</td>
-				{% endfor %}
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	{% endif %}
+		<div id="script-table"></div>
+{% endblock %}
+
+{% block javascript %}
+{% if output %}
+	<script type="text/javascript">
+		var script_data = {{ output|tojson|safe }};
+	</script>
+
+	<script type="text/javascript">
+		$(function () {
+		    $("#script-table").append(jsonToTable(script_data));
+		});
+	</script>
+{% endif %}
 {% endblock %}

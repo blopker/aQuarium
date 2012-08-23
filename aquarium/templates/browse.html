@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<ul>
+	{% for file in output %}
+		<li><a href="{{ url_for('section', sec=g.section, path=file) }}">{{file}}</a></li>
+	{% endfor %}
+</ul>
+
+{% endblock %}

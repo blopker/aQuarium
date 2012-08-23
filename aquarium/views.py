@@ -1,81 +1,140 @@
-from flask import abort, url_for, render_template, g
+from flask import abort, render_template, g
 from aquarium import app
 import os
 from collections import OrderedDict
 import subprocess
 
 # configuration
-SCRIPTS = 'scripts'
+AQ_DIR = 'test_dir'
+# AQ_DIR = 'aq_dir'
 DEBUG = True
-LOGS = 'logs'
 
 app.config.from_object(__name__)
 
 
 @app.before_request
 def before_request():
-    g.logs = getLogs()
-    g.scripts = getScripts()
+    g.url_path = "/"
+    g.sections = getSections()
+    # g.logs = getLogs()
+    # g.scripts = getScripts()
 
+
+# @app.route('/')
+# def index():
+#     g.title = "Welcome to Aquarium"
+#     return render_template('index.html')
 
 @app.route('/')
+# @app.route('/<path:path>')
 def index():
-    g.title = "Welcome to Aquarium"
-    return render_template('index.html')
+    g.title = "Home"
+    g.url_path = '/'
+    return render_template('index.html', data=runScript('index.sh'))
 
 
-@app.route('/script/<script>')
-def script(script):
-    g.title = script
-    output = formatScript(runScript(script))
-    return render_template('script.html', output=output)
+@app.route('/<sec>/', defaults={'path': ""})
+@app.route('/<sec>/<path:path>')
+def section(sec, path):
+    g.section = sec
+    g.title = sec
+    g.url_path = '/' + sec
+    return globals()["section_" + sec](path)
 
 
-@app.route('/log/<log>')
-def log(log):
-    g.title = log
-    output = formatLog(readLog(log))
-    return render_template('log.html', output=output)
+def section_logs(path):
+    if isLog(path):
+        return render_template('log.html', output=tabularToDict(readLog('logs/' + path)))
+    return render_template('browse.html', output=getLogs())
 
 
-@app.errorhandler(500)
-def scriptFailed(error):
-    return render_template('script.html'), 500
+def section_scripts(path):
+    if path == "":
+        return render_template('browse.html', output=getScripts())
+    if isScript(path):
+        return render_template('script.html', output=tabularToDict(runScript('scripts/' + path)))
+    abort(404)
+
+# def getParent(path):
+#     return '/'.join(path.rstrip('/').split('/')[:-1]) + '/'
 
 
-@app.context_processor
-def nav():
-    nav = {}
-    script_nav = {}
-    for script in g.scripts:
-        script_nav[script] = url_for('script', script=script)
-    nav["Scripts"] = script_nav
+# def isFile(path):
+#     return os.path.isfile(app.config['AQ_DIR'] + os.sep + path)
 
-    logs_nav = {}
-    for log in g.logs:
-        logs_nav[log] = url_for('log', log=log)
-    nav["Logs"] = logs_nav
-    return dict(nav=nav)
+
+def isDir(path):
+    return os.path.isdir(app.config['AQ_DIR'] + os.sep + path)
+
+
+# def showFile(file):
+#     output = tabularToDict(readLog(file))
+#     return render_template('log.html', output=output)
+
+
+# def showDir(dir):
+#     g.dirs, g.files = getContents(dir)
+#     return render_template('index.html')
+
+# @app.route('/<path:path>')
+# def view(path):
+#     g.title = path.split("/")[-1]
+#     return "hello"
+
+# @app.route('/scripts/', defaults={'path': "/"})
+# @app.route('/scripts<path:path>')
+# def scripts(path):
+#     g.title = "Scripts"
+#     output = g.scripts
+#     return render_template('browse.html', output=output, type="script")
+
+
+# @app.route('/script/<file>')
+# def script(file):
+#     g.title = file
+#     output = tabularToDict(runScript(file))
+#     return render_template('script.html', output=output)
+
+
+# @app.route('/logs/', defaults={'path': "/"})
+# @app.route('/logs<path:path>')
+# def logs(path):
+#     g.title = "Logs"
+#     output = g.logs
+#     return render_template('browse.html', output=output, type="log")
+
+
+# @app.route('/log/<file>')
+# def log(file):
+#     g.title = file
+#     output = tabularToDict(readLog(file))
+#     return render_template('log.html', output=output)
+
+
+# @app.errorhandler(500)
+# def scriptFailed(error):
+#     return render_template('script.html'), 500
 
 
 def getLogs():
-    files = sorted(os.listdir(app.config['LOGS']))
-    logs = [x for x in files if os.access(app.config['LOGS'] + os.sep + x, os.R_OK)]
+    root = app.config['AQ_DIR'] + os.sep + 'logs'
+    files = sorted(os.listdir(root))
+    logs = [x for x in files if os.access(root + os.sep + x, os.R_OK)]
     return logs
 
 
 def readLog(log):
     text = ""
-    with open(app.config['LOGS'] + os.sep + log) as l:
+    with open(app.config['AQ_DIR'] + os.sep + log) as l:
         text = l.read()
     return text
 
 
-def formatScript(string):
-    return string.split('\n')
+# def formatScript(string):
+#     return string.split('\n')
 
 
-def formatLog(string):
+def tabularToDict(string):
     lists = string.strip().split('\n')
     lists = [lis.strip().split() for lis in lists]
     dic = OrderedDict()
@@ -84,23 +143,42 @@ def formatLog(string):
         dic[args[0]] = args[1:]
     map(mapper, *lists)
 
-    # json_out = json.dumps(dic)
     return dic
 
 
 def runScript(script):
-    if not script in g.scripts:
-        abort(501)
     try:
-        return subprocess.check_output(app.config['SCRIPTS'] + os.sep + script,
+        return subprocess.check_output(app.config['AQ_DIR'] + os.sep + script,
             stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError, e:
         g.error = e.output
         abort(500)
 
 
+def getSections():
+    root = app.config['AQ_DIR']
+    contents = os.listdir(root)
+    dirs = sorted([x for x in contents if os.path.isdir(root + os.sep + x)])
+    return dirs
+
+
+def isScript(path):
+    root = app.config['AQ_DIR'] + os.sep
+    if isDir(root + path):
+        return False
+    return os.access(root + path, os.X_OK)
+
+
+def isLog(path):
+    return path.split('/')[-1] in getLogs()
+
+
 def getScripts():
-    files = sorted(os.listdir(app.config['SCRIPTS']))
+    root = app.config['AQ_DIR'] + os.sep
+    path = 'scripts' + os.sep
+    files = sorted(os.listdir(root + path))
+    print files
     #  Only use scripts that are executable (X_OK).
-    scripts = [x for x in files if os.access(app.config['SCRIPTS'] + os.sep + x, os.X_OK)]
+    scripts = [x for x in files if isScript(path + x)]
+    print scripts
     return scripts
