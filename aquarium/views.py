@@ -39,7 +39,10 @@ def section(sec, path):
     g.section = sec
     g.title = sec
     g.url_path = '/' + sec
-    return globals()["section_" + sec](path)
+    try:
+        return globals()["section_" + sec](path)
+    except KeyError:
+        return abort(404)
 
 
 def section_logs(path):
