@@ -1,4 +1,4 @@
-from flask import abort, g
+from flask import g
 from collections import OrderedDict
 from aquarium import app
 import os
@@ -27,4 +27,4 @@ def runScript(script):
             stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError, e:
         g.error = e.output
-        abort(500)
+        return e.output

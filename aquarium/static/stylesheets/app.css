@@ -1,6 +1,10 @@
 body{
 	margin-top: 30px;
-	margin-left: 30px;
+	/*margin-left: 30px;*/
+}
+
+html{
+	padding: 20px;
 }
 
 #logo{
@@ -8,6 +12,7 @@ body{
 	font-weight: bold;
 	letter-spacing: -1px;
 	color: #222222;
+	float: left;
 }
 
 .graph-control{
@@ -22,4 +27,8 @@ nav ul {
 	font-weight: bold;
 	color: #222222;
 	list-style: none outside;
+}
+
+.version{
+	float: right;
 }

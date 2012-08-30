@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block javascript %}
-{% if output %}
+{% if output and not g.error %}
 	<script type="text/javascript">
 		var script_data = {{ output|tojson|safe }};
 	</script>

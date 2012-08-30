@@ -1,4 +1,4 @@
-from flask import abort, render_template
+from flask import abort, render_template, g
 from aquarium import app, utils
 import os
 
@@ -7,6 +7,7 @@ def index(path):
     if path == "":
         return render_template('browse.html', output=getScripts())
     if isScript('scripts/' + path):
+        g.title = path
         return render_template('script.html',
             output=utils.tabularToDict(utils.runScript('scripts/' + path)))
     abort(404)

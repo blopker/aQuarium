@@ -14,7 +14,6 @@
   <meta name="viewport" content="width=device-width" />
 
   <title>aQuarium</title>
-
   <!-- Included CSS Files (Compressed) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/foundation.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/app.css') }}">
@@ -33,6 +32,7 @@
   <div class="row">
     <div class="twelve columns">
       <a href="{{ url_for('index') }}"><h1 id="logo">aQuarium</h1></a>
+      <span class='version'>{{ g.version }}</span>
     </div>
   </div>
   <div class="row">
