@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% endblock %}
+
+{% block javascript %}
+{% if output and not g.error %}
+	{% for script in output %}
+		<div class='ajax-script row'>
+			<div class='info row'>
+				<div class="eleven columns name">
+					{{script.name}}
+				</div>
+				<div class='one columns actions'>
+					<button class="small button run-button" href="{{script.runURL}}">Run</button>
+					<img class="spinner" src="{{ url_for('static', filename='images/load.gif') }}">
+				</div>
+			</div>
+			<div class='results'>
+			</div>
+		</div>
+	{% endfor %}
+
+{% endif %}
+{% endblock %}

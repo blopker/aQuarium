@@ -8,11 +8,5 @@
 	<script type="text/javascript">
 		var script_data = {{ output|tojson|safe }};
 	</script>
-
-	<script type="text/javascript">
-		$(function () {
-		    $("#script-table").append(jsonToTable(script_data));
-		});
-	</script>
 {% endif %}
 {% endblock %}

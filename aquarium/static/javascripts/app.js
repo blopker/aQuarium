@@ -29,8 +29,35 @@
 
 // For log.html
 $(function () {
-    $("#log-table").append(jsonToTable(log_data));
-    plotJson(log_data, document.getElementById('plotholder'));
+    if($("#log-table").length){
+        $("#log-table").append(jsonToTable(log_data));
+        plotJson(log_data, document.getElementById('plotholder'));
+    }
+});
+
+// For script.html
+$(function () {
+    if($("#script-table").length){
+        $("#script-table").append(jsonToTable(script_data));
+    }
+});
+
+// For ajax.html
+$(".spinner").hide();
+$(function () {
+    $(".ajax-script").each(function() {
+        var $script = $(this);
+        $script.find(".run-button").click(function() {
+            var runURL = $(this).attr('href');
+            var $button = $(this);
+            $button.hide();
+            $script.find('.spinner').show();
+            $script.find(".results").load(runURL, {}, function() {
+                $button.show();
+                $script.find('.spinner').hide();
+            });
+        });
+    })
 });
 
 function plotJson(json, holder){

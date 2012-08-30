@@ -28,3 +28,10 @@ def runScript(script):
     except subprocess.CalledProcessError, e:
         g.error = e.output
         return e.output
+
+
+def isScript(path):
+    root = app.config['AQ_DIR'] + os.sep
+    if isDir(root + path):
+        return False
+    return os.access(root + path, os.X_OK)

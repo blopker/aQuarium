@@ -60,7 +60,7 @@ class ScriptsTestCase(unittest.TestCase):
         assert "command not found" in resp.data
 
     def test_isScript(self):
-        assert scripts.isScript('scripts/ps.sh') == True
+        assert utils.isScript('scripts/ps.sh') == True
 
 
 class NsmanTestCase(unittest.TestCase):
@@ -72,6 +72,7 @@ class NsmanTestCase(unittest.TestCase):
     def test_nsman_index(self):
         resp = self.app.get('nsman/')
         assert 'nsman' in resp.data
+        assert 'sleep' in resp.data
 
 if __name__ == '__main__':
     unittest.main()
