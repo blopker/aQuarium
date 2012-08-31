@@ -1,5 +1,4 @@
 from flask import g
-from collections import OrderedDict
 from aquarium import app
 import os
 import subprocess
@@ -8,7 +7,7 @@ import subprocess
 def tabularToDict(string):
     lists = string.strip().split('\n')
     lists = [lis.strip().split() for lis in lists]
-    dic = OrderedDict()
+    dic = {}
 
     def mapper(*args):
         dic[args[0]] = args[1:]
