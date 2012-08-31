@@ -1,25 +1,26 @@
 {% extends "layout.html" %}
 {% block body %}
-
-{% endblock %}
-
-{% block javascript %}
 {% if output and not g.error %}
-	{% for script in output %}
-		<div class='ajax-script row'>
-			<div class='info row'>
-				<div class="eleven columns name">
-					{{script.name}}
+	{% for section in output %}
+			<h3>{{ section }}</h3>
+			{% for control in output[section] %}
+			<div class='ajax-control'>
+				<div class='row '>
+					<div class="eleven columns name">
+						<h5>{{control.name}}</h5>
+					</div>
+					<div class='one column actions'>
+						<button class="small button run-button" href="{{control.runURL}}">Run</button>
+						<img class="spinner" src="{{ url_for('static', filename='images/load.gif') }}">
+					</div>
 				</div>
-				<div class='one columns actions'>
-					<button class="small button run-button" href="{{script.runURL}}">Run</button>
-					<img class="spinner" src="{{ url_for('static', filename='images/load.gif') }}">
-				</div>
+				<div class='results'></div>
 			</div>
-			<div class='results'>
-			</div>
-		</div>
+			{% endfor %}
 	{% endfor %}
 
 {% endif %}
+{% endblock %}
+
+{% block javascript %}
 {% endblock %}

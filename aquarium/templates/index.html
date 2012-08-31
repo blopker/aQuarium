@@ -1,4 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
-	{{ data }}
+<div id='index-table'>
+
+</div>
+{% if output and not g.error %}
+	<script type="text/javascript">
+		var index_data = {{ output|tojson|safe }};
+	</script>
+{% endif %}
 {% endblock %}

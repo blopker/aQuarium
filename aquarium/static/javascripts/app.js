@@ -27,6 +27,13 @@
 
 })(jQuery);
 
+// For index.html
+$(function() {
+    if ($('#index-table').length) {
+        $("#index-table").append(jsonToTable(index_data));
+    }
+})
+
 // For log.html
 $(function () {
     if($("#log-table").length){
@@ -45,14 +52,16 @@ $(function () {
 // For ajax.html
 $(".spinner").hide();
 $(function () {
-    $(".ajax-script").each(function() {
+    $(".ajax-control").each(function() {
         var $script = $(this);
         $script.find(".run-button").click(function() {
             var runURL = $(this).attr('href');
             var $button = $(this);
             $button.hide();
             $script.find('.spinner').show();
-            $script.find(".results").load(runURL, {}, function() {
+            var $results = $script.find(".results");
+            $results.html('');
+            $results.load(runURL, {}, function() {
                 $button.show();
                 $script.find('.spinner').hide();
             });

@@ -30,13 +30,11 @@
 </head>
 <body>
   <div class="row">
-    <div class="twelve columns">
+
       <a href="{{ url_for('index') }}"><h1 id="logo">aQuarium</h1></a>
       <span class='version'>{{ g.version }}</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="twelve columns">
+
+
       <nav>
         <ul class="link-list">
           {% for sec in g.sections%}
@@ -44,22 +42,20 @@
           {% endfor %}
         </ul>
       </nav>
-    </div>
     <hr>
-  </div>
-      <div class="row">
-        <div class="twelve columns">
-          <h2>{{ g.title }}</h2>
+
+  <h2>{{ g.title }}</h2>
+
+
             {% if g.error %}
-            <div class="alert-box alert">
-                {{ g.error }}
-                <a href="" class="close">&times;</a>
-            </div>
+              <div class="alert-box alert">
+                  {{ g.error }}
+                  <a href="" class="close">&times;</a>
+              </div>
             {% endif %}
             {% block body %}
             {% endblock %}
-        </div>
-      </div>
+  </div>
   <!-- Included JS Files (Compressed) -->
   <script src="{{ url_for('static', filename='javascripts/foundation.min.js') }}"></script>
 

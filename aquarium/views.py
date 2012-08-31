@@ -26,7 +26,9 @@ def before_request():
 def index():
     g.title = "Home"
     g.url_path = '/'
-    return render_template('index.html', data=utils.runScript('index.sh'))
+    raw = utils.runScript('index.sh')
+    data = utils.tabularToDict(raw)
+    return render_template('index.html', output=data)
 
 
 @app.route('/<sec>/', defaults={'path': ""}, methods=['GET', 'POST'])
