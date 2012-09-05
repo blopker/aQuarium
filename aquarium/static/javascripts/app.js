@@ -74,7 +74,7 @@ function plotJson(json, holder){
         var container = document.createElement("div");
         var title = document.createElement("h4");
         title.innerHTML = index;
-        // container.appendChild(title);
+        container.appendChild(title);
         var button = document.createElement("button")
         var plot = document.createElement("div");
         plot.style.width = "100%";
@@ -88,7 +88,12 @@ function plotJson(json, holder){
             graph_data.push([t, parseInt(data[t], 10)]);
         }
 
-        $.plot($("#" + plot.id), [graph_data]);
+        function rand () {
+             return Math.floor(Math.random()*255);
+        }
+
+        var rgb = 'rgb('+rand()+','+rand()+','+rand()+')'
+        $.plot($("#" + plot.id), [{data:graph_data, color:rgb}]);
 
     });
 }

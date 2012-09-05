@@ -27,3 +27,7 @@ nav ul {
 .version{
 	float: right;
 }
+
+ul{
+	list-style: none;
+}
