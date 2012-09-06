@@ -4,7 +4,7 @@ import os
 import importlib
 
 # configuration
-AQ_DIR = 'test_dir'
+AQ_DIR = 'scripts'
 # AQ_DIR = 'aq_dir'
 DEBUG = True
 VERSION = '0.1'

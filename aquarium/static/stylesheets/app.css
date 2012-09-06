@@ -6,6 +6,10 @@ html{
 	padding: 20px;
 }
 
+h2{
+	border-bottom: 1px solid #2BA6CB;
+}
+
 #logo{
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: bold;
@@ -30,4 +34,8 @@ nav ul {
 
 ul{
 	list-style: none;
+}
+
+.name{
+	cursor: pointer;
 }

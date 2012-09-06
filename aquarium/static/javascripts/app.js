@@ -52,21 +52,37 @@ $(function () {
 // For ajax.html
 $(".spinner").hide();
 $(function () {
+    $(".results").hide();
     $(".ajax-control").each(function() {
-        var $script = $(this);
-        $script.find(".run-button").click(function() {
+        var $control = $(this);
+        button_click($control);
+        results_hide ($control);
+
+    });
+
+    function results_hide ($control) {
+        var title = $control.find('.name');
+        var results = $control.find('.results');
+        $(title).click(function() {
+            results.slideToggle();
+        });
+    }
+
+    function button_click ($control) {
+        $control.find(".run-button").click(function() {
             var runURL = $(this).attr('href');
             var $button = $(this);
             $button.hide();
-            $script.find('.spinner').show();
-            var $results = $script.find(".results");
-            $results.html('');
+            $control.find('.spinner').show();
+            var $results = $control.find(".results");
+            $results.slideUp();
             $results.load(runURL, {}, function() {
+                $results.slideDown();
                 $button.show();
-                $script.find('.spinner').hide();
+                $control.find('.spinner').hide();
             });
         });
-    })
+    }
 });
 
 function plotJson(json, holder){

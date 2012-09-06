@@ -7,7 +7,7 @@ from collections import OrderedDict
 class AquariumTestCase(unittest.TestCase):
 
     def setUp(self):
-        aquarium.app.config['AQ_DIR'] = 'test_dir'
+        aquarium.app.config['AQ_DIR'] = 'scripts'
         self.app = aquarium.app.test_client()
 
     def test_index(self):
@@ -25,7 +25,7 @@ class AquariumTestCase(unittest.TestCase):
 class LogsTestCase(unittest.TestCase):
     """Tests for the built in logs section"""
     def setUp(self):
-        aquarium.app.config['AQ_DIR'] = 'test_dir'
+        aquarium.app.config['AQ_DIR'] = 'scripts'
         self.app = aquarium.app.test_client()
 
     def test_log(self):
@@ -41,7 +41,7 @@ class LogsTestCase(unittest.TestCase):
 class InfoTestCase(unittest.TestCase):
     """Tests for the built in info section"""
     def setUp(self):
-        aquarium.app.config['AQ_DIR'] = 'test_dir'
+        aquarium.app.config['AQ_DIR'] = 'scripts'
         self.app = aquarium.app.test_client()
 
     def test_info_index(self):
@@ -65,7 +65,7 @@ class InfoTestCase(unittest.TestCase):
 class ControlsTestCase(unittest.TestCase):
     """Tests for Controls"""
     def setUp(self):
-        aquarium.app.config['AQ_DIR'] = 'test_dir'
+        aquarium.app.config['AQ_DIR'] = 'scripts'
         self.app = aquarium.app.test_client()
 
     def test_controls_index(self):
@@ -75,7 +75,6 @@ class ControlsTestCase(unittest.TestCase):
 
     def test_control(self):
         resp = self.app.post('/controls/nsman/start.sh')
-        print resp.data
         assert 'started' in resp.data
 
 if __name__ == '__main__':
