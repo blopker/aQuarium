@@ -7,7 +7,7 @@ import importlib
 AQ_DIR = 'scripts'
 # AQ_DIR = 'aq_dir'
 DEBUG = True
-VERSION = '0.1'
+VERSION = '0.1.1'
 
 app.config.from_object(__name__)
 
