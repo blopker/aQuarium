@@ -14,7 +14,6 @@ class AjaxScript():
 def index(path):
     if request.method == 'POST':
         resp = utils.runScript('controls/' + path).replace('\n', '<br/>')
-        print resp
         return resp
     return render_template('ajax.html', output=getControls())
 

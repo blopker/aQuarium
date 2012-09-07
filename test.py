@@ -1,3 +1,5 @@
+#!venv/bin/python
+
 import aquarium
 from aquarium import utils
 import unittest
