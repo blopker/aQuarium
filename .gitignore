@@ -2,7 +2,7 @@
 *.pyc
 *.pyo
 venv
-scripts
+scripts/*
 env*
 dist
 *.egg
