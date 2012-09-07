@@ -23,7 +23,7 @@ def isDir(path):
 def runScript(script):
     try:
         return subprocess.check_output(app.config['AQ_DIR'] + os.sep + script,
-            stderr=subprocess.STDOUT)
+            stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError, e:
         g.error = e.output
         return e.output
