@@ -1,5 +1,5 @@
 aQuarium
 ========
-Poke your server's glass
+let's poke your server's glass
 
-### To update run 'git pull'
+### To update run 'git pull'.
